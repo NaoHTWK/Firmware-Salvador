@@ -30,10 +30,11 @@ This firmware was successfully used at the RoboCup Salvador 2025, Beijing Master
 - **Deploy Directories:** 
   - `build-k1z/deploy` (ZED2)
   - `build-k1d/deploy` (Drobotics)
+    using the Droidbotics Camera is highly untestet. It might only work in 1 out of 5 cases. 
 
 ---
 
-### Optional (for Image Download)
+### Needed Software
 - **scp** (SFTP client)
 - **zstd** (compression)
 - **pv** (progress display)
@@ -104,6 +105,13 @@ Example:
 
 In addition to the firmware, various setup scripts are included.
 Using the scripts is at your own risk. Incorrect usage can easily lock you out of a robot.
+
+### Run
+
+Execute on robot
+```bash
+./bin/fw_salvador
+```
 
 ---
 
