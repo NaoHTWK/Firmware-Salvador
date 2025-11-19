@@ -1,0 +1,11 @@
+---
+description:
+globs: **/*.c,**/*.cpp,**/*.h,**/*.hpp,**/*.cxx,CMakeLists.txt,*.cmake,conanfile.txt,Makefil,**/*.cc
+alwaysApply: false
+---
+- Don't modify code that doesn't need to be modified
+- Don't add extra things/features that I didn't ask for
+- Don't add comments that are trivial and just describe the next line of code
+- Provide concise implementations
+- Ak to clarify if something isn't clear
+- If you'd like to see build errors, run .devcontainer/build.sh

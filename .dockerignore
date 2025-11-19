@@ -1,0 +1,15 @@
+# Exclude build directories and large files from Docker build context
+build-*
+build_vscode/
+localization_debugger/
+team_strategy_debugger/
+
+# Exclude other large directories that aren't needed for building the toolchain
+*.tar.gz
+*.tar.bz2
+*.tar.zst
+*.deb
+
+# Keep only what's needed for the toolchain build
+!third_party/
+!toolchains/

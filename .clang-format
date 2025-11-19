@@ -1,0 +1,13 @@
+﻿---
+BasedOnStyle: Google
+AccessModifierOffset: '-4'
+AllowShortBlocksOnASingleLine: 'false'
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: 'false'
+AllowShortLoopsOnASingleLine: 'false'
+ColumnLimit: '100'
+ContinuationIndentWidth: '8'
+IndentWidth: '4'
+KeepEmptyLinesAtTheStartOfBlocks: 'true'
+
+...

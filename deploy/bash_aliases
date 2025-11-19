@@ -1,0 +1,32 @@
+alias clean="rm -rf ~/Workspace/logs/*  ~/depth_images* nohup.out"
+alias network="$HOME/etc/Network.py"
+
+alias stop="killall fw_salvador"
+alias start="nohup $HOME/bin/fw_salvador '$@' &"
+alias check-time="systemctl status systemd-timesyncd.service | cat --"
+alias sync-time="sudo timedatectl set-ntp false; sudo timedatectl set-ntp true"
+
+set-time() {
+    if (( ${#@} > 0 )) ; then
+        sudo systemctl stop systemd-timesyncd
+        sudo timedatectl set-time "$1"
+    else
+        echo "Usage: set-time <DATETIME>"
+        echo "  e.g. set-time '2025-07-16 15:30:00'"
+        echo "  run til all robots exit at the same time"
+    fi
+}
+
+echo 123456 | sudo -S killall realsense2_camera_node 2>/dev/null || true
+echo 123456 | sudo -S killall booster-video-stream 2>/dev/null || true
+
+echo -e "\n\n"
+echo "Some handy aliases/functions"
+echo "  clean       remove all logs"
+echo "  set-time    disables ntp and sets a given time"
+echo "  check-time  check time sync status"
+echo "  sync-time   sync time with local ntp server"
+echo "  network     set wifi network"
+echo "  start       start fw_salvador with params and nohup"
+echo "  stop        kill fw_salvador"
+
