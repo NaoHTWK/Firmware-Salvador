@@ -119,12 +119,12 @@ while [[ "$#" -gt 0 ]]; do
             CAMERA_MODEL="zed2"
             shift
             ;;
-        --k1d)
-            echo "building for K1 with Drobotics camera"
-            DEPLOY_PATH="deploy_k1d"
-            BUILD_PATH="build-k1d"
+        --k1bc)
+            echo "building for K1 with Booster camera"
+            DEPLOY_PATH="deploy_k1bc"
+            BUILD_PATH="build-k1bc"
             ROBOT_MODEL="k1"
-            CAMERA_MODEL="drobotics"
+            CAMERA_MODEL="booster_camera"
             shift
             ;;
         -h|--help)

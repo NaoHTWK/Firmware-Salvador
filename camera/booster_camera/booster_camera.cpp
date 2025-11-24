@@ -1,4 +1,4 @@
-#include "drobotics.h"
+#include "booster_camera.h"
 
 #include <fcntl.h>
 #include <sys/mman.h>
@@ -14,11 +14,11 @@
 #include <stdexcept>
 
 #include "image.h"
-#include "ipc/drobotics_shm.h"
+#include "ipc/booster_camera_shm.h"
 #include "logging.h"
 #include "robot_time.h"
 
-Drobotics::ShmReader::ShmReader(const char* shm_name, const char* sem_name) {
+Booster_Camera::ShmReader::ShmReader(const char* shm_name, const char* sem_name) {
     fd = shm_open(shm_name, O_RDONLY, 0666);
     if (fd == -1) {
         throw std::runtime_error("shm_open failed: " + std::string(strerror(errno)));
@@ -45,7 +45,7 @@ Drobotics::ShmReader::ShmReader(const char* shm_name, const char* sem_name) {
     }
 }
 
-Drobotics::ShmReader::~ShmReader() {
+Booster_Camera::ShmReader::~ShmReader() {
     if (ptr)
         munmap(ptr, size);
     if (fd != -1)
@@ -54,25 +54,25 @@ Drobotics::ShmReader::~ShmReader() {
         sem_close(sem);
 }
 
-Drobotics::Drobotics() = default;
+Booster_Camera::Booster_Camera() = default;
 
-Drobotics::~Drobotics() {
+Booster_Camera::~Booster_Camera() {
     stop();
 }
 
-void Drobotics::rgb_thread_func() {
+void Booster_Camera::rgb_thread_func() {
     while (running) {
         sem_wait(rgb_reader->sem);
         if (!running)
             break;
 
-        drobotics::ShmHeader* header = static_cast<drobotics::ShmHeader*>(rgb_reader->ptr);
+        booster_camera::ShmHeader* header = static_cast<booster_camera::ShmHeader*>(rgb_reader->ptr);
         char* encoding_ptr = header->encoding;
         uint8_t* data_ptr = reinterpret_cast<uint8_t*>(encoding_ptr + header->encoding_len);
 
         {
             std::lock_guard<std::mutex> lock(mtx);
-            latest_rgb_header = std::make_unique<drobotics::ShmHeader>(*header);
+            latest_rgb_header = std::make_unique<booster_camera::ShmHeader>(*header);
             latest_rgb_yuv = cv::Mat(header->height * 1.5, header->width, CV_8UC1, data_ptr).clone();
             new_frame = true;
             cv.notify_one();
@@ -80,19 +80,19 @@ void Drobotics::rgb_thread_func() {
     }
 }
 
-void Drobotics::depth_thread_func() {
+void Booster_Camera::depth_thread_func() {
     while (running) {
         sem_wait(depth_reader->sem);
         if (!running)
             break;
 
-        drobotics::ShmHeader* header = static_cast<drobotics::ShmHeader*>(depth_reader->ptr);
+        booster_camera::ShmHeader* header = static_cast<booster_camera::ShmHeader*>(depth_reader->ptr);
         char* encoding_ptr = header->encoding;
         uint8_t* data_ptr = reinterpret_cast<uint8_t*>(encoding_ptr + header->encoding_len);
 
         {
             std::lock_guard<std::mutex> lock(mtx);
-            latest_depth_header = std::make_unique<drobotics::ShmHeader>(*header);
+            latest_depth_header = std::make_unique<booster_camera::ShmHeader>(*header);
             latest_depth = cv::Mat(header->height, header->width, CV_16UC1, data_ptr).clone();
             new_frame = true;
             cv.notify_one();
@@ -100,7 +100,7 @@ void Drobotics::depth_thread_func() {
     }
 }
 
-void Drobotics::start_ros() {
+void Booster_Camera::start_ros() {
     LOG_F(INFO, "Starting camera service via restart_camera script...");
 
     // Execute the restart_camera binary with sudo (password: 123456)
@@ -115,9 +115,9 @@ void Drobotics::start_ros() {
     }
 
     // Start the ROS2 to Shared Memory bridge
-    LOG_F(INFO, "Starting drobotics_shm_publisher bridge...");
+    LOG_F(INFO, "Starting Booster_Camera_shm_publisher bridge...");
     const char* bridge_cmd =
-            "cd /home/booster/etc/drobotics_shm_publisher && ./start_shm_bridge.sh >/tmp/shm_bridge.log 2>&1 &";
+            "cd /home/booster/etc/Booster_Camera_shm_publisher && ./start_shm_bridge.sh >/tmp/shm_bridge.log 2>&1 &";
 
     result = system(bridge_cmd);
 
@@ -128,7 +128,7 @@ void Drobotics::start_ros() {
     }
 }
 
-void Drobotics::start() {
+void Booster_Camera::start() {
     start_ros();
 
     // Wait for bridge to create shared memory segments (retry for up to 10 seconds)
@@ -139,9 +139,9 @@ void Drobotics::start() {
 
     while (retry_count < max_retries && !success) {
         try {
-            rgb_reader = std::make_unique<ShmReader>(drobotics::RGB_SHM_NAME, drobotics::RGB_SEM_NAME);
-            depth_reader = std::make_unique<ShmReader>(drobotics::DEPTH_SHM_NAME, drobotics::DEPTH_SEM_NAME);
-            LOG_F(INFO, "Drobotics camera connector started.");
+            rgb_reader = std::make_unique<ShmReader>(booster_camera::RGB_SHM_NAME, booster_camera::RGB_SEM_NAME);
+            depth_reader = std::make_unique<ShmReader>(booster_camera::DEPTH_SHM_NAME, booster_camera::DEPTH_SEM_NAME);
+            LOG_F(INFO, "Booster_Camera camera connector started.");
             success = true;
         } catch (const std::runtime_error& e) {
             retry_count++;
@@ -149,18 +149,18 @@ void Drobotics::start() {
                 LOG_F(INFO, "Waiting for shared memory to be ready... (attempt %d/%d)", retry_count, max_retries);
                 usleep(retry_delay_ms * 1000); // Convert ms to microseconds
             } else {
-                LOG_F(ERROR, "Failed to start Drobotics camera connector after %d attempts: %s", max_retries, e.what());
+                LOG_F(ERROR, "Failed to start Booster_Camera camera connector after %d attempts: %s", max_retries, e.what());
                 exit(EXIT_FAILURE);
             }
         }
     }
 
     running = true;
-    rgb_thread = std::thread(&Drobotics::rgb_thread_func, this);
-    depth_thread = std::thread(&Drobotics::depth_thread_func, this);
+    rgb_thread = std::thread(&Booster_Camera::rgb_thread_func, this);
+    depth_thread = std::thread(&Booster_Camera::depth_thread_func, this);
 }
 
-void Drobotics::stop() {
+void Booster_Camera::stop() {
     if (running) {
         running = false;
         // Unblock threads waiting on semaphores
@@ -180,10 +180,10 @@ void Drobotics::stop() {
 
     rgb_reader.reset();
     depth_reader.reset();
-    LOG_F(INFO, "Drobotics camera connector stopped.");
+    LOG_F(INFO, "Booster_Camera camera connector stopped.");
 }
 
-std::shared_ptr<Image> Drobotics::get_image() {
+std::shared_ptr<Image> Booster_Camera::get_image() {
 
     std::unique_lock<std::mutex> lock(mtx);
     // Frame matching logic

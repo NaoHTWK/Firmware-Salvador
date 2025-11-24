@@ -19,12 +19,12 @@ std::unique_ptr<htwk::Camera> htwk::choose_camera() {
     return htwk::Camera::create_camera<Realsense>();
 }
 
-#elif defined(DROBOTICS_CAMERA)
+#elif defined(BOOSTER_CAMERA)
 
-#include <drobotics.h>
+#include <booster_camera.h>
 
 std::unique_ptr<htwk::Camera> htwk::choose_camera() {
-    return htwk::Camera::create_camera<Drobotics>();
+    return htwk::Camera::create_camera<Booster_Camera>();
 }
 
 #else

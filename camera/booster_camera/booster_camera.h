@@ -10,16 +10,16 @@
 #include <thread>
 
 #include "../camera_connector.h"
-#include "ipc/drobotics_shm.h"
+#include "ipc/booster_camera_shm.h"
 
-namespace drobotics {
+namespace booster_camera {
 struct ShmHeader;
 }
 
-class Drobotics : public htwk::CameraConnector {
+class Booster_Camera : public htwk::CameraConnector {
 public:
-    Drobotics();
-    ~Drobotics() override;
+    Booster_Camera();
+    ~Booster_Camera() override;
 
     void start() override;
     void stop() override;
@@ -53,9 +53,9 @@ private:
 
     // Buffer for latest images
     cv::Mat latest_rgb_yuv;
-    std::unique_ptr<drobotics::ShmHeader> latest_rgb_header;
+    std::unique_ptr<booster_camera::ShmHeader> latest_rgb_header;
 
     cv::Mat latest_depth;
-    std::unique_ptr<drobotics::ShmHeader> latest_depth_header;
+    std::unique_ptr<booster_camera::ShmHeader> latest_depth_header;
     bool new_frame = false;
 };

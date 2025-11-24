@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Script to build (if needed) and start the drobotics_shm_publisher
+# Script to build (if needed) and start the booster_camera_shm_publisher
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INSTALL_DIR="$SCRIPT_DIR/install"
 BUILD_MARKER="$SCRIPT_DIR/build/.built"
 
-echo "=== Drobotics SHM Bridge Startup Script ==="
+echo "=== Booster Camera SHM Bridge Startup Script ==="
 
 # Check if already built
 if [ ! -f "$BUILD_MARKER" ] || [ ! -d "$INSTALL_DIR" ]; then
@@ -23,8 +23,8 @@ if [ ! -f "$BUILD_MARKER" ] || [ ! -d "$INSTALL_DIR" ]; then
     
     # Build the package
     cd "$SCRIPT_DIR"
-    echo "Building drobotics_shm_publisher..."
-    colcon build --packages-select drobotics_shm_publisher
+    echo "Building booster_camera_shm_publisher..."
+    colcon build --packages-select booster_camera_shm_publisher
     
     if [ $? -eq 0 ]; then
         echo "✓ Build successful"
@@ -42,15 +42,15 @@ fi
 if [ -f "$INSTALL_DIR/setup.bash" ]; then
     source /opt/booster/BoosterRos2/install/setup.bash
     source "$INSTALL_DIR/setup.bash"
-    echo "✓ Sourced drobotics_shm_publisher environment"
+    echo "✓ Sourced booster_camera_shm_publisher environment"
 else
     echo "✗ Error: Install directory not found!"
     exit 1
 fi
 
 # Start the publisher
-echo "Starting drobotics_shm_publisher..."
+echo "Starting booster_camera_shm_publisher..."
 echo "Press Ctrl+C to stop"
 echo "================================"
 
-ros2 run drobotics_shm_publisher publisher
+ros2 run booster_camera_shm_publisher publisher

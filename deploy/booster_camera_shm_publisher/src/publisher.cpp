@@ -16,7 +16,7 @@
 
 #include <thread>
 
-#include "drobotics_shm_publisher/shm_util.h"
+#include "booster_camera_shm_publisher/shm_util.h"
 
 class ShmWriter {
 public:
@@ -76,14 +76,14 @@ public:
                     msg->width, msg->height, msg->encoding.c_str());
 
         size_t encoding_len = msg->encoding.length() + 1;
-        size_t header_size = sizeof(drobotics::ShmHeader) + encoding_len;
+        size_t header_size = sizeof(booster_camera::ShmHeader) + encoding_len;
         if (header_size + msg->data.size() > size_) {
             RCLCPP_ERROR(rclcpp::get_logger("shm_publisher"),
                          "Image data exceeds shared memory size!");
             return;
         }
 
-        drobotics::ShmHeader* header = static_cast<drobotics::ShmHeader*>(ptr_);
+        booster_camera::ShmHeader* header = static_cast<booster_camera::ShmHeader*>(ptr_);
         header->timestamp_sec = msg->header.stamp.sec;
         header->timestamp_nanosec = msg->header.stamp.nanosec;
         header->width = msg->width;
@@ -116,7 +116,7 @@ public:
                         const std::string& encoding, size_t image_data_size)
         : Node(node_name) {
         size_t encoding_len = encoding.length() + 1;
-        size_t header_size = sizeof(drobotics::ShmHeader) + encoding_len;
+        size_t header_size = sizeof(booster_camera::ShmHeader) + encoding_len;
         writer_ = std::make_unique<ShmWriter>(shm_name, sem_name, header_size + image_data_size);
 
         subscription_ = this->create_subscription<sensor_msgs::msg::Image>(
@@ -138,12 +138,12 @@ int main(int argc, char** argv) {
 
     auto depth_publisher = std::make_shared<ImageTopicPublisher>(
             "depth_image_shm_publisher",
-            "/booster_camera_bridge/StereoNetNode/stereonet_depth", drobotics::DEPTH_SHM_NAME,
-            drobotics::DEPTH_SEM_NAME, "mono16", 448 * 1088);
+            "/booster_camera_bridge/StereoNetNode/stereonet_depth", booster_camera::DEPTH_SHM_NAME,
+            booster_camera::DEPTH_SEM_NAME, "mono16", 448 * 1088);
 
     auto rgb_publisher = std::make_shared<ImageTopicPublisher>(
             "rgb_image_shm_publisher", "/booster_camera_bridge/StereoNetNode/rectified_image",
-            drobotics::RGB_SHM_NAME, drobotics::RGB_SEM_NAME, "nv12", 448 * 544 * 1.5);
+            booster_camera::RGB_SHM_NAME, booster_camera::RGB_SEM_NAME, "nv12", 448 * 544 * 1.5);
 
     rclcpp::executors::MultiThreadedExecutor executor;
     executor.add_node(depth_publisher);

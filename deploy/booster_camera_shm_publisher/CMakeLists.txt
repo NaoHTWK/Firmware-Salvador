@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(drobotics_shm_publisher)
+project(booster_camera_shm_publisher)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
