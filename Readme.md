@@ -26,11 +26,11 @@ This firmware was successfully used at the RoboCup Salvador 2025, Beijing Master
 ### K1
 - **Camera Options:**
   - ZED2: `--k1z`
-  - Drobotics: `--k1d`
+  - Booster Camera: `--k1bc`
 - **Deploy Directories:** 
   - `build-k1z/deploy` (ZED2)
-  - `build-k1d/deploy` (Drobotics)
-    using the Droidbotics Camera is highly untestet. It might only work in 1 out of 5 cases. 
+  - `build-k1bc/deploy` (Booster Camera)
+    using the Booster Camera is highly untestet. It might only work in 1 out of 5 cases. 
 
 ---
 
@@ -66,9 +66,9 @@ This creates the Docker images for cross-compilation. This needs to be executed 
 ./install.bash --k1z
 ```
 
-#### For K1 with Drobotics Camera
+#### For K1 with Booster Camera Camera
 ```bash
-./install.bash --k1d
+./install.bash --k1bc
 ```
 
 
