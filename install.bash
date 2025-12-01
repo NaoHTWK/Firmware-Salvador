@@ -30,7 +30,7 @@ fix_ssh_key_file_permissions() {
 LOCAL_DIR=$(pwd)
 
 # Docker image configuration
-DOCKER_IMAGE_VERSION="${DOCKER_IMAGE_VERSION:-$(cat TOOLCHAIN_VERSION 2>/dev/null || echo 'unknown')}"
+DOCKER_IMAGE_VERSION="release1_0"
 SFTP_HOST="${SFTP_HOST:-your}"
 SFTP_PORT="${SFTP_PORT:-infrastructure}"
 SFTP_USER="${SFTP_USER:-here}"
