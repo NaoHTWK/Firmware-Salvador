@@ -6,7 +6,7 @@
 set -e
 
 # Configuration - should match install.bash
-DOCKER_IMAGE_VERSION="${DOCKER_IMAGE_VERSION:-$(hg id -i 2>/dev/null | cut -c1-12 || echo 'unknown')}"
+DOCKER_IMAGE_VERSION="release1_0"
 SFTP_HOST="your"
 SFTP_PORT="infra"
 SFTP_USER="structur"
