@@ -37,7 +37,7 @@ print_error() {
 }
 
 # Write version to TOOLCHAIN_VERSION file (after functions are defined)
-echo "$DOCKER_IMAGE_VERSION" > ../TOOLCHAIN_VERSION
+echo "$DOCKER_IMAGE_VERSION" > TOOLCHAIN_VERSION
 print_status "Updated TOOLCHAIN_VERSION file with: $DOCKER_IMAGE_VERSION"
 
 # Function to build and upload a single image
