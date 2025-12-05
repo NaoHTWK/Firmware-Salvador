@@ -39,18 +39,19 @@ This firmware was successfully used at the RoboCup Salvador 2025, Beijing Master
 - **zstd** (compression)
 - **pv** (progress display)
 
-## 🔧 Installation & Build
+## 🔧 Installation, Build & Deployment
 
 ### 1. Prepare Toolchain Images
-
+This command creates the Docker images for cross-compilation. Run this on the mashine (not the robot) that will build the firmware . This needs to be executed once. 
+It may take a while and requires internet access. You can copy the docker image on other mashines so it needs to be run only once per team.
 ```bash
 ./toolchains/build_and_push_images.sh
 ```
 
-This creates the Docker images for cross-compilation. This needs to be executed once. It may take a while and requires internet access.
+
 
 ### 2. Build Firmware
-
+This command will build our firmware. The Docker image from step 1 needs to be aviable.
 #### For T1 (Standard RoboCup Version)
 ```bash
 ./install.bash --t1_robocup_version
@@ -71,20 +72,9 @@ This creates the Docker images for cross-compilation. This needs to be executed 
 ./install.bash --k1bc
 ```
 
+### 3.1. Build and Deploy to Single Robot
 
-### 3. Build Process
-
-The build process runs automatically in a Docker container:
-1. The toolchain image must be built or a file server must be specified.
-2. Cross-compilation with CMake.
-3. Binaries and libraries are compiled.
-4. Deployment files are created in `build-*/deploy/`.
-
----
-
-## 🚀 Deployment
-
-### Build and Deploy to Single Robot
+This command will build and deploy our firmware to a robot. Please note that the robot model needs to be specified.
 
 ```bash
 ./install.bash --t1_robocup_version <ROBOT_IP>
@@ -95,10 +85,12 @@ Example:
 ./install.bash --t1_robocup_version 10.0.44.15
 ```
 
-### Deploy Only (without Build)
+### 3.2. Deploy Only (without Build)
+
+The --deploy flag will skip the building. It only works if the last build was sucessful.
 
 ```bash
-./install.bash --deploy --t1 <ROBOT_IP>
+./install.bash --deploy --t1_robocup_version <ROBOT_IP>
 ```
 
 ### Deployment Process
