@@ -4,7 +4,6 @@ add_library(${PROJECT_NAME}
     agent_runner.cpp
     walk_relative.cpp
     walk_to_pos.cpp
-    walk_custom.cpp
     shoot.cpp
     search_ball.cpp
     localize.cpp

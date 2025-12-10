@@ -5,12 +5,8 @@ project(motion_connector)
 add_library(motion_connector
     motion_connector_t1.h
     motion_connector_t1.cpp
-    motion_connector_t1_custom.h
-    motion_connector_t1_custom.cpp
     motion_connector_k1.h
     motion_connector_k1.cpp
-    walk_custom.h
-    walk_custom.cpp
 )
 target_include_directories(motion_connector
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}

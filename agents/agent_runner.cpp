@@ -8,7 +8,6 @@
 #include <search_ball.h>
 #include <shoot.h>
 #include <stl_ext.h>
-#include <walk_custom.h>
 #include <walk_relative.h>
 #include <walk_to_pos.h>
 #include <goalie_dive.h>
@@ -28,8 +27,6 @@ AgentRunner::AgentRunner(std::string agent_selection) {
         // agents.emplace_back(new ShootAgent);
         agents.emplace_back(new DribbleAgent);
         agents.emplace_back(new WalkToPositionAgent);
-    } else if (agent_selection == "walkcustom") {
-        agents.emplace_back(new WalkCustomAgent);
     }
     thread_pool = std::make_unique<ThreadPool>("AgentPool", agents.size());
 }

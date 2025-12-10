@@ -7,8 +7,6 @@
 #include "near_obstacle_tracker_result.h"
 #include "parameter_tuner/parameter_tuner.h"
 #include "point_2d.h"
-#include "walk_custom.h"
-
 class DribbleAgent : public AgentBase {
 public:
     DribbleAgent() : AgentBase("Dribble") {
@@ -25,8 +23,6 @@ private:
 
     htwk::ChannelSubscriber<LocPosition> loc_position_sub =
             loc_position_channel.create_subscriber();
-
-    WalkCustomAgent walk_custom;
 
     htwk::ChannelSubscriber<std::shared_ptr<htwk::NearObstacleTrackerResult>>
             near_obstacle_tracker_result_sub =
